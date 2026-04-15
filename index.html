@@ -2,20 +2,128 @@
 <html>
 <head>
   <title>MatchAI Predictor</title>
+
   <style>
-    body { font-family: Arial; text-align:center; padding:20px; }
-    input, button { padding:10px; margin:5px; font-size:16px; }
-    .card { margin-top:20px; padding:20px; border:1px solid #ddd; display:inline-block; }
+    body {
+      font-family: Arial;
+      text-align: center;
+      padding: 25px;
+      background: #f4f6fb;
+    }
+
+    /* LOGO */
+    .logo {
+      max-width: 100%;
+      height: auto;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      margin-bottom: 15px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    /* INPUTS */
+    .input-box {
+      padding: 12px;
+      margin: 8px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: 2px solid #ccc;
+      outline: none;
+      transition: 0.3s;
+      width: 200px;
+    }
+
+    .input-box:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 8px rgba(37,99,235,0.4);
+    }
+
+    /* USA BUTTON */
+    .usa-button {
+      margin-top: 10px;
+      padding: 12px 25px;
+      font-size: 18px;
+      font-weight: bold;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+
+      background: repeating-linear-gradient(
+        45deg,
+        #b22234,
+        #b22234 10px,
+        #fff 10px,
+        #fff 20px
+      );
+
+      position: relative;
+      overflow: hidden;
+      transition: 0.3s;
+    }
+
+    .usa-button::before {
+      content: "★";
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #3c3b6e;
+      font-size: 18px;
+    }
+
+    .usa-button:hover {
+      transform: scale(1.05);
+      opacity: 0.9;
+    }
+
+    /* CARD */
+    .card {
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: 15px;
+      background: white;
+      display: inline-block;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      width: 320px;
+    }
+
+    /* BARS */
+    .bar-bg {
+      background: #eee;
+      height: 14px;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .bar {
+      height: 14px;
+      border-radius: 10px;
+    }
+
+    .home { background: #22c55e; }
+    .draw { background: #f59e0b; }
+    .away { background: #ef4444; }
   </style>
 </head>
+
 <body>
+
+<!-- LOGO -->
+<img src="/mnt/data/image.png" class="logo">
 
 <h1>🔮 MatchAI World Cup 2026</h1>
 
-<input id="team1" placeholder="Home Team">
-<input id="team2" placeholder="Away Team">
+<input id="team1" class="input-box" placeholder="🏠 Home Team">
+<input id="team2" class="input-box" placeholder="✈️ Away Team">
+
 <br>
-<button onclick="predict()">Predict</button>
+
+<button class="usa-button" onclick="predict()">PREDICT</button>
 
 <div id="status">Loading...</div>
 <div id="result"></div>
@@ -66,7 +174,15 @@ function predict() {
     <div class="card">
       <h2>${m.t1} vs ${m.t2}</h2>
       <h3>🔮 ${pred}</h3>
-      <p>1: ${m.h}% | X: ${m.d}% | 2: ${m.a}%</p>
+
+      <p>Home (${m.h}%)</p>
+      <div class="bar-bg"><div class="bar home" style="width:${m.h}%"></div></div>
+
+      <p>Draw (${m.d}%)</p>
+      <div class="bar-bg"><div class="bar draw" style="width:${m.d}%"></div></div>
+
+      <p>Away (${m.a}%)</p>
+      <div class="bar-bg"><div class="bar away" style="width:${m.a}%"></div></div>
     </div>
   `;
 }
