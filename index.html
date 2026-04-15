@@ -27,6 +27,7 @@ fetch("https://raw.githubusercontent.com/SamilSen/matchai/main/predictions.csv")
 .then(r => r.text())
 .then(t => {
   const rows = t.split("\n").slice(1);
+
   data = rows.map(r => {
     const c = r.split(",");
     return {
