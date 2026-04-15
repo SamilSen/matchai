@@ -11,16 +11,24 @@
       background: #f4f6fb;
     }
 
+    /* LOGO (%40 küçültüldü) */
     .logo {
-      max-width: 100%;
+      width: 60%;
       height: auto;
+      display: block;
+      margin: 0 auto 15px auto;
       border-radius: 15px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-      margin-bottom: 15px;
     }
 
+    /* 🇺🇸 WORLD CUP 2026 HEADER */
     h1 {
+      font-size: 42px;
+      font-weight: 900;
       margin-bottom: 20px;
+      background: linear-gradient(90deg, #b91c1c, #ffffff, #2563eb);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .input-box {
@@ -84,7 +92,7 @@
     .draw { background: #f59e0b; }
     .away { background: #ef4444; }
 
-    /* 🔥 BAYRAK STYLE */
+    /* FLAG */
     .flag {
       width: 28px;
       height: 20px;
@@ -101,7 +109,7 @@
 
 <img src="https://raw.githubusercontent.com/SamilSen/matchai/main/image.png" class="logo">
 
-<h1>🔮 MatchAI World Cup 2026</h1>
+<h1>World Cup 2026</h1>
 
 <input id="team1" class="input-box" placeholder="🏠 Home Team">
 <input id="team2" class="input-box" placeholder="✈️ Away Team">
@@ -116,7 +124,29 @@
 <script>
 let data = [];
 
-// 🌍 BAYRAK API
+/* 🌍 COUNTRY FIX (GERMANY FIXED) */
+function getCode(team) {
+  const map = {
+    "germany": "de",
+    "deutschland": "de",
+    "turkey": "tr",
+    "türkiye": "tr",
+    "usa": "us",
+    "united states": "us",
+    "brazil": "br",
+    "france": "fr",
+    "spain": "es",
+    "england": "gb",
+    "italy": "it",
+    "argentina": "ar",
+    "portugal": "pt",
+    "netherlands": "nl"
+  };
+
+  return map[team.toLowerCase()] || team.slice(0,2).toLowerCase();
+}
+
+/* 🌍 FLAG FROM CDN */
 function flag(code) {
   return `<img class="flag" src="https://flagcdn.com/w40/${code.toLowerCase()}.png">`;
 }
@@ -162,12 +192,12 @@ function predict() {
     <div class="card">
 
       <h2>
-        ${flag(m.t1.slice(0,2))} ${m.t1}
+        ${flag(getCode(m.t1))} ${m.t1}
         vs
-        ${m.t2} ${flag(m.t2.slice(0,2))}
+        ${m.t2} ${flag(getCode(m.t2))}
       </h2>
 
-      <h3>🔮 ${pred}</h3>
+      <h3>${pred}</h3>
 
       <p>Home (${m.h}%)</p>
       <div class="bar-bg"><div class="bar home" style="width:${m.h}%"></div></div>
