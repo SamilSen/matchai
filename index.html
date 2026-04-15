@@ -11,7 +11,7 @@
       background: #f4f6fb;
     }
 
-    /* LOGO (%40 küçültüldü) */
+    /* LOGO */
     .logo {
       width: 60%;
       height: auto;
@@ -21,14 +21,24 @@
       box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     }
 
-    /* 🇺🇸 WORLD CUP 2026 (BOLD + LARGE + USA COLORS) */
+    /* 💜 WORLD CUP 2026 USA Canada Mexico (PURPLE ANIMATED) */
     h1 {
       font-size: 44px;
       font-weight: 900;
       margin-bottom: 20px;
-      background: linear-gradient(90deg, #b91c1c, #ffffff, #2563eb);
+
+      background: linear-gradient(90deg, #7c3aed, #a855f7, #ec4899, #7c3aed);
+      background-size: 300% 300%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+
+      animation: gradientMove 4s ease infinite;
+    }
+
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
     .input-box {
@@ -92,7 +102,6 @@
     .draw { background: #f59e0b; }
     .away { background: #ef4444; }
 
-    /* FLAG STYLE */
     .flag {
       width: 28px;
       height: 20px;
@@ -124,7 +133,6 @@
 <script>
 let data = [];
 
-/* 🌍 COUNTRY FIX (GERMANY FIXED + WORLD MAPPING) */
 function getCode(team) {
   const map = {
     "germany": "de",
@@ -146,7 +154,6 @@ function getCode(team) {
   return map[team.toLowerCase()] || team.slice(0,2).toLowerCase();
 }
 
-/* 🌍 FLAG CDN */
 function flag(code) {
   return `<img class="flag" src="https://flagcdn.com/w40/${code.toLowerCase()}.png">`;
 }
