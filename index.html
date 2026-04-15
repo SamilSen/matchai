@@ -41,7 +41,7 @@
       box-shadow: 0 0 8px rgba(37,99,235,0.4);
     }
 
-    /* USA BUTTON */
+    /* BUTTON */
     .usa-button {
       margin-top: 10px;
       padding: 12px 25px;
@@ -51,33 +51,13 @@
       border: none;
       border-radius: 12px;
       cursor: pointer;
-
-      background: repeating-linear-gradient(
-        45deg,
-        #b22234,
-        #b22234 10px,
-        #fff 10px,
-        #fff 20px
-      );
-
-      position: relative;
-      overflow: hidden;
+      background: #e11d48;
       transition: 0.3s;
-    }
-
-    .usa-button::before {
-      content: "★";
-      position: absolute;
-      left: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #3c3b6e;
-      font-size: 18px;
     }
 
     .usa-button:hover {
       transform: scale(1.05);
-      opacity: 0.9;
+      background: #be123c;
     }
 
     /* CARD */
@@ -88,7 +68,7 @@
       background: white;
       display: inline-block;
       box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-      width: 320px;
+      width: 340px;
     }
 
     /* BARS */
@@ -113,8 +93,8 @@
 
 <body>
 
-<!-- LOGO -->
-<img src="/mnt/data/image.png" class="logo">
+<!-- LOGO (image.png aynı klasörde olmalı) -->
+<img src="image.png" class="logo">
 
 <h1>🔮 MatchAI World Cup 2026</h1>
 
@@ -141,8 +121,6 @@ fetch("https://raw.githubusercontent.com/SamilSen/matchai/main/predictions.csv")
     return {
       t1: c[0],
       t2: c[1],
-      c1: c[2],
-      c2: c[3],
       h: +c[4],
       d: +c[5],
       a: +c[6]
