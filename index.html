@@ -11,7 +11,6 @@
       background: #f4f6fb;
     }
 
-    /* LOGO */
     .logo {
       max-width: 100%;
       height: auto;
@@ -24,7 +23,6 @@
       margin-bottom: 20px;
     }
 
-    /* INPUTS */
     .input-box {
       padding: 12px;
       margin: 8px;
@@ -41,7 +39,6 @@
       box-shadow: 0 0 8px rgba(37,99,235,0.4);
     }
 
-    /* BUTTON (RED + WHITE TEXT) */
     .usa-button {
       margin-top: 10px;
       padding: 12px 25px;
@@ -60,7 +57,6 @@
       background: #be123c;
     }
 
-    /* CARD */
     .card {
       margin-top: 20px;
       padding: 20px;
@@ -71,7 +67,6 @@
       width: 340px;
     }
 
-    /* BARS */
     .bar-bg {
       background: #eee;
       height: 14px;
@@ -88,12 +83,22 @@
     .home { background: #22c55e; }
     .draw { background: #f59e0b; }
     .away { background: #ef4444; }
+
+    /* 🔥 BAYRAK STYLE */
+    .flag {
+      width: 28px;
+      height: 20px;
+      border-radius: 4px;
+      object-fit: cover;
+      margin: 0 6px;
+      vertical-align: middle;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
   </style>
 </head>
 
 <body>
 
-<!-- ✅ GITHUB LOGO (FIXED) -->
 <img src="https://raw.githubusercontent.com/SamilSen/matchai/main/image.png" class="logo">
 
 <h1>🔮 MatchAI World Cup 2026</h1>
@@ -110,6 +115,11 @@
 
 <script>
 let data = [];
+
+// 🌍 BAYRAK API
+function flag(code) {
+  return `<img class="flag" src="https://flagcdn.com/w40/${code.toLowerCase()}.png">`;
+}
 
 fetch("https://raw.githubusercontent.com/SamilSen/matchai/main/predictions.csv")
 .then(r => r.text())
@@ -150,7 +160,13 @@ function predict() {
 
   document.getElementById("result").innerHTML = `
     <div class="card">
-      <h2>${m.t1} vs ${m.t2}</h2>
+
+      <h2>
+        ${flag(m.t1.slice(0,2))} ${m.t1}
+        vs
+        ${m.t2} ${flag(m.t2.slice(0,2))}
+      </h2>
+
       <h3>🔮 ${pred}</h3>
 
       <p>Home (${m.h}%)</p>
