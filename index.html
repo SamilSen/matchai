@@ -1,56 +1,75 @@
-<div style="
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:280px;
-  flex-direction:column;
-  text-align:center;
-  font-family:Arial, sans-serif;
-">
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MatchAI Predictor</title>
+  <style>
+    body { font-family: Arial; text-align:center; padding:20px; }
+    input, button { padding:10px; margin:5px; font-size:16px; }
+    .card { margin-top:20px; padding:20px; border:1px solid #ddd; display:inline-block; }
+  </style>
+</head>
+<body>
 
-  <!-- TITLE -->
-  <h2 style="
-    font-size:32px;
-    margin-bottom:10px;
-    font-weight:900;
-    letter-spacing:1px;
-    background: linear-gradient(90deg,#b22234,#ffffff,#3c3b6e);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  ">
-    Start World Cup 2026 Prediction
-  </h2>
+<h1>🔮 MatchAI World Cup 2026</h1>
 
-  <!-- SUBTITLE -->
-  <p style="
-    margin:0;
-    margin-bottom:20px;
-    font-size:15px;
-    font-weight:600;
-    color:#3c3b6e;
-  ">
-    🇺🇸 AI Football Prediction Engine
-  </p>
+<input id="team1" placeholder="Home Team">
+<input id="team2" placeholder="Away Team">
+<br>
+<button onclick="predict()">Predict</button>
 
-  <!-- BUTTON -->
-  <a href="https://samilsen.github.io/matchai/" target="_blank"
-     style="
-      padding:16px 45px;
-      font-size:18px;
-      font-weight:bold;
-      border-radius:14px;
-      text-decoration:none;
-      color:white;
-      background: linear-gradient(90deg,#b22234,#3c3b6e);
-      box-shadow:0 12px 30px rgba(0,0,0,0.25);
-      border:2px solid #ffffff;
-      display:inline-block;
-      transition:0.3s ease;
-     "
-     onmouseover="this.style.transform='scale(1.08)'"
-     onmouseout="this.style.transform='scale(1)'"
-  >
-    🇺🇸 START PREDICTION
-  </a>
+<div id="status">Loading...</div>
+<div id="result"></div>
 
-</div>
+<script>
+let data = [];
+
+fetch("https://raw.githubusercontent.com/SamilSen/matchai/main/predictions.csv")
+.then(r => r.text())
+.then(t => {
+  const rows = t.split("\n").slice(1);
+  data = rows.map(r => {
+    const c = r.split(",");
+    return {
+      t1: c[0],
+      t2: c[1],
+      c1: c[2],
+      c2: c[3],
+      h: +c[4],
+      d: +c[5],
+      a: +c[6]
+    };
+  });
+
+  document.getElementById("status").innerHTML = "✅ Ready";
+});
+
+function predict() {
+  const t1 = document.getElementById("team1").value.toLowerCase();
+  const t2 = document.getElementById("team2").value.toLowerCase();
+
+  const m = data.find(x =>
+    x.t1.toLowerCase() === t1 && x.t2.toLowerCase() === t2
+  );
+
+  if (!m) {
+    document.getElementById("result").innerHTML = "Not found";
+    return;
+  }
+
+  let pred =
+    (m.h > m.d && m.h > m.a) ? m.t1 + " Win" :
+    (m.a > m.h && m.a > m.d) ? m.t2 + " Win" :
+    "Draw";
+
+  document.getElementById("result").innerHTML = `
+    <div class="card">
+      <h2>${m.t1} vs ${m.t2}</h2>
+      <h3>🔮 ${pred}</h3>
+      <p>1: ${m.h}% | X: ${m.d}% | 2: ${m.a}%</p>
+    </div>
+  `;
+}
+</script>
+
+</body>
+</html>
