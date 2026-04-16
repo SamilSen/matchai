@@ -11,7 +11,6 @@
       background: #f4f6fb;
     }
 
-    /* LOGO (%15 BÜYÜTÜLDÜ) */
     .logo {
       width: 86%;
       height: auto;
@@ -21,7 +20,6 @@
       box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     }
 
-    /* TITLE */
     h1 {
       font-size: 44px;
       font-weight: 900;
@@ -33,7 +31,6 @@
       -webkit-text-fill-color: transparent;
 
       animation: gradientMove 4s ease infinite;
-      line-height: 1.2;
     }
 
     @keyframes gradientMove {
@@ -42,39 +39,15 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* INPUTS (%15 BÜYÜTÜLDÜ) */
     .input-box {
       padding: 20px;
       margin: 8px;
       font-size: 26px;
       border-radius: 12px;
       border: 2px solid #ccc;
-      outline: none;
-      transition: 0.3s;
       width: 330px;
     }
 
-    #team1 {
-      background: #ecfdf5;
-      border-color: #22c55e;
-    }
-
-    #team1:focus {
-      border-color: #16a34a;
-      box-shadow: 0 0 10px rgba(34,197,94,0.4);
-    }
-
-    #team2 {
-      background: #eff6ff;
-      border-color: #3b82f6;
-    }
-
-    #team2:focus {
-      border-color: #2563eb;
-      box-shadow: 0 0 10px rgba(59,130,246,0.4);
-    }
-
-    /* BUTTON (%20 BÜYÜTÜLDÜ) */
     .usa-button {
       margin-top: 10px;
       padding: 20px 43px;
@@ -93,59 +66,69 @@
       background: #be123c;
     }
 
-    /* RESULT CARD (%30 BÜYÜTÜLDÜ) */
+    /* CARD (%45 + ANIMATION) */
     .card {
       margin-top: 20px;
-      padding: 26px;
+      padding: 29px;
       border-radius: 15px;
       background: white;
       display: inline-block;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-      width: 440px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+      width: 495px;
+
+      animation: fadeIn 0.6s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
     }
 
     .card h2 {
-      font-size: 30px;
-      margin-bottom: 10px;
+      font-size: 34px;
     }
 
     .card h3 {
-      font-size: 26px;
-      margin-bottom: 10px;
+      font-size: 30px;
+      margin-bottom: 12px;
     }
 
     .card p {
-      font-size: 20px;
-      font-weight: 500;
-      margin: 6px 0;
+      font-size: 23px;
+    }
+
+    /* WINNER GLOW */
+    .winner {
+      color: #16a34a;
+      font-weight: bold;
+      text-shadow: 0 0 10px rgba(34,197,94,0.7);
     }
 
     .bar-bg {
       background: #eee;
-      height: 18px;
+      height: 20px;
       border-radius: 10px;
       overflow: hidden;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
 
     .bar {
-      height: 18px;
+      height: 20px;
       border-radius: 10px;
+      width: 0;
+      transition: width 1s ease;
     }
 
     .home { background: #22c55e; }
     .draw { background: #f59e0b; }
     .away { background: #ef4444; }
 
-    /* FLAG (%30 BÜYÜTÜLDÜ) */
     .flag {
-      width: 36px;
-      height: 26px;
+      width: 41px;
+      height: 29px;
       border-radius: 4px;
-      object-fit: cover;
       margin: 0 6px;
       vertical-align: middle;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
   </style>
 </head>
@@ -186,72 +169,81 @@ function getCode(team) {
     "portugal": "pt",
     "netherlands": "nl"
   };
-
   return map[team.toLowerCase()] || team.slice(0,2).toLowerCase();
 }
 
 function flag(code) {
-  return `<img class="flag" src="https://flagcdn.com/w40/${code.toLowerCase()}.png">`;
+  return `<img class="flag" src="https://flagcdn.com/w40/${code}.png">`;
 }
 
 fetch("https://raw.githubusercontent.com/SamilSen/matchai/main/predictions.csv")
 .then(r => r.text())
 .then(t => {
   const rows = t.split("\n").slice(1);
-
   data = rows.map(r => {
     const c = r.split(",");
-    return {
-      t1: c[0],
-      t2: c[1],
-      h: +c[4],
-      d: +c[5],
-      a: +c[6]
-    };
+    return { t1:c[0], t2:c[1], h:+c[4], d:+c[5], a:+c[6] };
   });
-
   document.getElementById("status").innerHTML = "✅ Ready";
 });
 
 function predict() {
-  const t1 = document.getElementById("team1").value.toLowerCase();
-  const t2 = document.getElementById("team2").value.toLowerCase();
+  const t1 = team1.value.toLowerCase();
+  const t2 = team2.value.toLowerCase();
 
   const m = data.find(x =>
     x.t1.toLowerCase() === t1 && x.t2.toLowerCase() === t2
   );
 
   if (!m) {
-    document.getElementById("result").innerHTML = "Not found";
+    result.innerHTML = "Not found";
     return;
   }
 
-  let pred =
-    (m.h > m.d && m.h > m.a) ? m.t1 + " Win" :
-    (m.a > m.h && m.a > m.d) ? m.t2 + " Win" :
-    "Draw";
+  let pred, winClass1="", winClass2="";
 
-  document.getElementById("result").innerHTML = `
+  if (m.h > m.d && m.h > m.a) {
+    pred = m.t1 + " Win";
+    winClass1 = "winner";
+  } else if (m.a > m.h && m.a > m.d) {
+    pred = m.t2 + " Win";
+    winClass2 = "winner";
+  } else {
+    pred = "Draw";
+  }
+
+  result.innerHTML = `
     <div class="card">
 
       <h2>
-        ${flag(getCode(m.t1))} ${m.t1}
+        <span class="${winClass1}">
+          ${flag(getCode(m.t1))} ${m.t1}
+        </span>
         vs
-        ${m.t2} ${flag(getCode(m.t2))}
+        <span class="${winClass2}">
+          ${m.t2} ${flag(getCode(m.t2))}
+        </span>
       </h2>
 
       <h3>${pred}</h3>
 
       <p>Home (${m.h}%)</p>
-      <div class="bar-bg"><div class="bar home" style="width:${m.h}%"></div></div>
+      <div class="bar-bg"><div id="bar1" class="bar home"></div></div>
 
       <p>Draw (${m.d}%)</p>
-      <div class="bar-bg"><div class="bar draw" style="width:${m.d}%"></div></div>
+      <div class="bar-bg"><div id="bar2" class="bar draw"></div></div>
 
       <p>Away (${m.a}%)</p>
-      <div class="bar-bg"><div class="bar away" style="width:${m.a}%"></div></div>
+      <div class="bar-bg"><div id="bar3" class="bar away"></div></div>
+
     </div>
   `;
+
+  setTimeout(() => {
+    bar1.style.width = m.h + "%";
+    bar2.style.width = m.d + "%";
+    bar3.style.width = m.a + "%";
+  }, 100);
 }
 </script>
 
