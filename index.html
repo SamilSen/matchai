@@ -51,20 +51,8 @@
       width: 330px;
     }
 
-    #team1 {
-      background: #ecfdf5;
-      border-color: #22c55e;
-    }
-
-    #team2 {
-      background: #eff6ff;
-      border-color: #3b82f6;
-    }
-
-    #team1:focus, #team2:focus {
-      outline: none;
-      box-shadow: 0 0 10px rgba(59,130,246,0.3);
-    }
+    #team1 { background: #ecfdf5; border-color: #22c55e; }
+    #team2 { background: #eff6ff; border-color: #3b82f6; }
 
     /* BUTTON */
     .usa-button {
@@ -85,15 +73,15 @@
       background: #be123c;
     }
 
-    /* CARD */
+    /* 🔥 RESULT CARD (%50 BÜYÜTÜLDÜ) */
     .card {
       margin-top: 20px;
-      padding: 29px;
+      padding: 35px;              /* büyütüldü */
       border-radius: 15px;
       background: white;
       display: inline-block;
       box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-      width: 495px;
+      width: 520px;               /* %50 civarı büyüme */
       animation: fadeIn 0.6s ease;
     }
 
@@ -102,36 +90,26 @@
       to { opacity: 1; transform: scale(1); }
     }
 
-    .card h2 {
-      font-size: 34px;
-    }
+    .card h2 { font-size: 36px; }
+    .card h3 { font-size: 32px; }
+    .card p  { font-size: 24px; }
 
-    .card h3 {
-      font-size: 30px;
-    }
-
-    .card p {
-      font-size: 23px;
-    }
-
-    /* WINNER */
     .winner {
       color: #16a34a;
       font-weight: bold;
       text-shadow: 0 0 10px rgba(34,197,94,0.6);
     }
 
-    /* BARS */
     .bar-bg {
       background: #eee;
-      height: 20px;
+      height: 22px;
       border-radius: 10px;
       overflow: hidden;
       margin-bottom: 14px;
     }
 
     .bar {
-      height: 20px;
+      height: 22px;
       border-radius: 10px;
       width: 0;
       transition: width 1s ease;
@@ -141,25 +119,27 @@
     .draw { background: #f59e0b; }
     .away { background: #ef4444; }
 
-    /* FLAGS */
     .flag {
-      width: 41px;
-      height: 29px;
+      width: 45px;
+      height: 32px;
       border-radius: 4px;
       margin: 0 6px;
       vertical-align: middle;
     }
 
-    /* DISCLAIMER */
+    /* 🔴 LEGAL DISCLAIMER (2 YANA YASLANDI) */
     .disclaimer {
       margin-top: 25px;
       font-size: 13px;
       color: #dc2626;
       font-weight: 600;
       line-height: 1.5;
-      max-width: 800px;
+      max-width: 900px;
+
       margin-left: auto;
       margin-right: auto;
+
+      text-align: justify;   /* 👈 iki yana yaslandı */
     }
   </style>
 </head>
@@ -185,7 +165,7 @@
   ⚠️ Legal Disclaimer:  
   This application is intended for AI-driven sports analytics purposes only.  
 
-  All predictions are generated using an advanced machine learning framework trained on historical match data, time-series analysis techniques, statistical modeling, and feature engineering, including sliding window approaches to capture temporal performance trends.  
+  All predictions are generated using physics informed advanced machine learning framework trained on historical match data, transmorfer time-series analysis techniques and feature engineering, including sliding window approaches to capture temporal performance trends.  
 
   These predictions are probabilistic and do not represent official results, guarantees, or real-world outcomes.  
 
@@ -214,7 +194,6 @@ function getCode(team) {
     "portugal": "pt",
     "netherlands": "nl"
   };
-
   return map[team.toLowerCase()] || team.slice(0,2).toLowerCase();
 }
 
