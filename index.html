@@ -11,7 +11,6 @@
       background: #f4f6fb;
     }
 
-    /* LOGO */
     .logo {
       width: 86%;
       height: auto;
@@ -21,17 +20,14 @@
       box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     }
 
-    /* TITLE */
     h1 {
       font-size: 44px;
       font-weight: 900;
       margin-bottom: 20px;
-
       background: linear-gradient(90deg, #6d28d9, #a855f7, #ec4899, #6d28d9);
       background-size: 300% 300%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-
       animation: gradientMove 4s ease infinite;
     }
 
@@ -41,7 +37,6 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* INPUTS */
     .input-box {
       padding: 20px;
       margin: 8px;
@@ -54,7 +49,6 @@
     #team1 { background: #ecfdf5; border-color: #22c55e; }
     #team2 { background: #eff6ff; border-color: #3b82f6; }
 
-    /* BUTTON */
     .usa-button {
       margin-top: 10px;
       padding: 20px 43px;
@@ -73,31 +67,20 @@
       background: #be123c;
     }
 
-    /* 🔥 RESULT CARD (%50 BÜYÜTÜLDÜ) */
     .card {
       margin-top: 20px;
-      padding: 35px;              /* büyütüldü */
+      padding: 35px;
       border-radius: 15px;
       background: white;
       display: inline-block;
       box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-      width: 520px;               /* %50 civarı büyüme */
+      width: 520px;
       animation: fadeIn 0.6s ease;
     }
 
     @keyframes fadeIn {
       from { opacity: 0; transform: scale(0.9); }
       to { opacity: 1; transform: scale(1); }
-    }
-
-    .card h2 { font-size: 36px; }
-    .card h3 { font-size: 32px; }
-    .card p  { font-size: 24px; }
-
-    .winner {
-      color: #16a34a;
-      font-weight: bold;
-      text-shadow: 0 0 10px rgba(34,197,94,0.6);
     }
 
     .bar-bg {
@@ -127,19 +110,24 @@
       vertical-align: middle;
     }
 
-    /* 🔴 LEGAL DISCLAIMER (2 YANA YASLANDI) */
-    .disclaimer {
-      margin-top: 25px;
-      font-size: 13px;
-      color: #dc2626;
-      font-weight: 600;
-      line-height: 1.5;
-      max-width: 900px;
+    /* 🔒 UPGRADE BOX */
+    .upgrade {
+      margin-top: 20px;
+      display: none;
+      background: #111827;
+      color: white;
+      padding: 20px;
+      border-radius: 15px;
+    }
 
-      margin-left: auto;
-      margin-right: auto;
-
-      text-align: justify;   /* 👈 iki yana yaslandı */
+    .upgrade button {
+      padding: 15px 25px;
+      background: #22c55e;
+      border: none;
+      color: white;
+      font-size: 18px;
+      border-radius: 10px;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -153,66 +141,46 @@
 <input id="team1" class="input-box" placeholder="🏠 Home Team">
 <input id="team2" class="input-box" placeholder="✈️ Away Team">
 
-<br>
+<br><br>
 
 <button class="usa-button" onclick="predict()">PREDICT</button>
 
-<div id="status">Loading...</div>
 <div id="result"></div>
 
-<!-- DISCLAIMER -->
-<div class="disclaimer">
-  ⚠️ Legal Disclaimer:  
-  This application is intended for AI-driven sports analytics purposes only.  
-
-  All predictions are generated using physics informed advanced machine learning framework trained on historical match data, transmorfer time-series analysis techniques and feature engineering, including sliding window approaches to capture temporal performance trends.  
-
-  This tool is not intended for betting, gambling, or financial decision-making of any kind.  
-
-  MatchAI Labs expressly disclaims all liability for any direct or indirect damages arising from the use of this application.  
+<!-- UPGRADE BOX -->
+<div id="upgradeBox" class="upgrade">
+  <h2>🔒 Free Limit Reached</h2>
+  <p>You used your 3 free predictions.</p>
+  <p><b>Upgrade for $9.99</b></p>
+  <button onclick="buyPremium()">Upgrade Now</button>
 </div>
 
 <script>
+let freeCount = localStorage.getItem("freeCount")
+  ? parseInt(localStorage.getItem("freeCount"))
+  : 0;
+
+// 📊 DATA (senin CSV yerine demo)
 let data = [];
-
-function getCode(team) {
-  const map = {
-    "germany": "de",
-    "deutschland": "de",
-    "turkey": "tr",
-    "türkiye": "tr",
-    "usa": "us",
-    "united states": "us",
-    "brazil": "br",
-    "france": "fr",
-    "spain": "es",
-    "england": "gb",
-    "italy": "it",
-    "argentina": "ar",
-    "portugal": "pt",
-    "netherlands": "nl"
-  };
-  return map[team.toLowerCase()] || team.slice(0,2).toLowerCase();
-}
-
-function flag(code) {
-  return `<img class="flag" src="https://flagcdn.com/w40/${code}.png">`;
-}
 
 fetch("https://raw.githubusercontent.com/SamilSen/matchai/main/predictions.csv")
 .then(r => r.text())
 .then(t => {
   const rows = t.split("\n").slice(1);
-
   data = rows.map(r => {
     const c = r.split(",");
     return { t1:c[0], t2:c[1], h:+c[4], d:+c[5], a:+c[6] };
   });
-
-  document.getElementById("status").innerHTML = "✅ Ready";
 });
 
 function predict() {
+
+  // 🔒 FREE LIMIT CHECK
+  if (freeCount >= 3) {
+    document.getElementById("upgradeBox").style.display = "block";
+    return;
+  }
+
   const t1 = team1.value.toLowerCase();
   const t2 = team2.value.toLowerCase();
 
@@ -221,54 +189,37 @@ function predict() {
   );
 
   if (!m) {
-    result.innerHTML = "Not found";
+    result.innerHTML = "<div class='card'>Not found</div>";
     return;
   }
 
-  let pred, w1="", w2="";
+  freeCount++;
+  localStorage.setItem("freeCount", freeCount);
 
-  if (m.h > m.d && m.h > m.a) {
-    pred = m.t1 + " Win";
-    w1 = "winner";
-  } else if (m.a > m.h && m.a > m.d) {
-    pred = m.t2 + " Win";
-    w2 = "winner";
-  } else {
-    pred = "Draw";
-  }
+  let pred = m.h > m.a ? "Home Win" : "Away Win";
 
   result.innerHTML = `
     <div class="card">
-
-      <h2>
-        <span class="${w1}">
-          ${flag(getCode(m.t1))} ${m.t1}
-        </span>
-        vs
-        <span class="${w2}">
-          ${m.t2} ${flag(getCode(m.t2))}
-        </span>
-      </h2>
-
+      <h2>${m.t1} vs ${m.t2}</h2>
       <h3>${pred}</h3>
 
-      <p>Home (${m.h}%)</p>
-      <div class="bar-bg"><div id="bar1" class="bar home"></div></div>
+      <p>Home: ${m.h}%</p>
+      <div class="bar-bg"><div class="bar home" style="width:${m.h}%"></div></div>
 
-      <p>Draw (${m.d}%)</p>
-      <div class="bar-bg"><div id="bar2" class="bar draw"></div></div>
+      <p>Draw: ${m.d}%</p>
+      <div class="bar-bg"><div class="bar draw" style="width:${m.d}%"></div></div>
 
-      <p>Away (${m.a}%)</p>
-      <div class="bar-bg"><div id="bar3" class="bar away"></div></div>
+      <p>Away: ${m.a}%</p>
+      <div class="bar-bg"><div class="bar away" style="width:${m.a}%"></div></div>
 
+      <p>Free used: ${freeCount}/3</p>
     </div>
   `;
+}
 
-  setTimeout(() => {
-    bar1.style.width = m.h + "%";
-    bar2.style.width = m.d + "%";
-    bar3.style.width = m.a + "%";
-  }, 100);
+// 💳 STRIPE LINK (buraya kendi linkini koy)
+function buyPremium() {
+  window.location.href = "https://buy.stripe.com/test_your_link_here";
 }
 </script>
 
