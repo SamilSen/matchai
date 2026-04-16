@@ -11,6 +11,7 @@
       background: #f4f6fb;
     }
 
+    /* LOGO */
     .logo {
       width: 86%;
       height: auto;
@@ -20,6 +21,7 @@
       box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     }
 
+    /* TITLE */
     h1 {
       font-size: 44px;
       font-weight: 900;
@@ -39,6 +41,7 @@
       100% { background-position: 0% 50%; }
     }
 
+    /* INPUTS */
     .input-box {
       padding: 20px;
       margin: 8px;
@@ -48,6 +51,22 @@
       width: 330px;
     }
 
+    #team1 {
+      background: #ecfdf5;
+      border-color: #22c55e;
+    }
+
+    #team2 {
+      background: #eff6ff;
+      border-color: #3b82f6;
+    }
+
+    #team1:focus, #team2:focus {
+      outline: none;
+      box-shadow: 0 0 10px rgba(59,130,246,0.3);
+    }
+
+    /* BUTTON */
     .usa-button {
       margin-top: 10px;
       padding: 20px 43px;
@@ -66,7 +85,7 @@
       background: #be123c;
     }
 
-    /* CARD (%45 + ANIMATION) */
+    /* CARD */
     .card {
       margin-top: 20px;
       padding: 29px;
@@ -75,7 +94,6 @@
       display: inline-block;
       box-shadow: 0 15px 35px rgba(0,0,0,0.15);
       width: 495px;
-
       animation: fadeIn 0.6s ease;
     }
 
@@ -90,20 +108,20 @@
 
     .card h3 {
       font-size: 30px;
-      margin-bottom: 12px;
     }
 
     .card p {
       font-size: 23px;
     }
 
-    /* WINNER GLOW */
+    /* WINNER */
     .winner {
       color: #16a34a;
       font-weight: bold;
-      text-shadow: 0 0 10px rgba(34,197,94,0.7);
+      text-shadow: 0 0 10px rgba(34,197,94,0.6);
     }
 
+    /* BARS */
     .bar-bg {
       background: #eee;
       height: 20px;
@@ -123,12 +141,25 @@
     .draw { background: #f59e0b; }
     .away { background: #ef4444; }
 
+    /* FLAGS */
     .flag {
       width: 41px;
       height: 29px;
       border-radius: 4px;
       margin: 0 6px;
       vertical-align: middle;
+    }
+
+    /* DISCLAIMER */
+    .disclaimer {
+      margin-top: 25px;
+      font-size: 13px;
+      color: #dc2626;
+      font-weight: 600;
+      line-height: 1.5;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
     }
   </style>
 </head>
@@ -148,6 +179,20 @@
 
 <div id="status">Loading...</div>
 <div id="result"></div>
+
+<!-- DISCLAIMER -->
+<div class="disclaimer">
+  ⚠️ Legal Disclaimer:  
+  This application is intended for AI-driven sports analytics purposes only.  
+
+  All predictions are generated using an advanced machine learning framework trained on historical match data, time-series analysis techniques, statistical modeling, and feature engineering, including sliding window approaches to capture temporal performance trends.  
+
+  These predictions are probabilistic and do not represent official results, guarantees, or real-world outcomes.  
+
+  This tool is not intended for betting, gambling, or financial decision-making of any kind.  
+
+  MatchAI Labs expressly disclaims all liability for any direct or indirect damages arising from the use of this application.  
+</div>
 
 <script>
 let data = [];
@@ -169,6 +214,7 @@ function getCode(team) {
     "portugal": "pt",
     "netherlands": "nl"
   };
+
   return map[team.toLowerCase()] || team.slice(0,2).toLowerCase();
 }
 
@@ -180,10 +226,12 @@ fetch("https://raw.githubusercontent.com/SamilSen/matchai/main/predictions.csv")
 .then(r => r.text())
 .then(t => {
   const rows = t.split("\n").slice(1);
+
   data = rows.map(r => {
     const c = r.split(",");
     return { t1:c[0], t2:c[1], h:+c[4], d:+c[5], a:+c[6] };
   });
+
   document.getElementById("status").innerHTML = "✅ Ready";
 });
 
@@ -200,14 +248,14 @@ function predict() {
     return;
   }
 
-  let pred, winClass1="", winClass2="";
+  let pred, w1="", w2="";
 
   if (m.h > m.d && m.h > m.a) {
     pred = m.t1 + " Win";
-    winClass1 = "winner";
+    w1 = "winner";
   } else if (m.a > m.h && m.a > m.d) {
     pred = m.t2 + " Win";
-    winClass2 = "winner";
+    w2 = "winner";
   } else {
     pred = "Draw";
   }
@@ -216,11 +264,11 @@ function predict() {
     <div class="card">
 
       <h2>
-        <span class="${winClass1}">
+        <span class="${w1}">
           ${flag(getCode(m.t1))} ${m.t1}
         </span>
         vs
-        <span class="${winClass2}">
+        <span class="${w2}">
           ${m.t2} ${flag(getCode(m.t2))}
         </span>
       </h2>
